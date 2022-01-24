@@ -2,15 +2,27 @@
 const add_screen_btn = document.querySelector('.add-screen-btn');
 const screens_block = document.querySelector('.main-controls__views');
 const start_btn = document.getElementById('start');
+const reset_btn = document.getElementById('reset');
 let screen_areas = document.querySelectorAll('.screen');
 const percent_checks = document.querySelectorAll('.other-items.percent')
 const number_checks = document.querySelectorAll('.other-items.number')
 const rollback_block = document.querySelector('.main-controls__range');
 const rollback_range = rollback_block.querySelector('input[type=range]');
 const rollback_value = rollback_block.querySelector('.range-value');
+let layout_price = 0;
+let add_serv_price = 0;
+let final_price = 0;
+let total_layout_price = document.getElementById('total');
+let total_number = document.getElementById('total-count');
+let total_add_price = document.getElementById('total-count-other');
+let total_price = document.getElementById('total-full-count');
+let total_price_roll = document.getElementById('total-count-rollback');
 let new_screen_area;
 let final_screen_number = 0;
 let final_screens_sum = 0;
+let all_inputs;
+let all_selects;
+
 // let valid_form = true;
 
 // Обед таксиста чееееек
@@ -98,8 +110,7 @@ function checkboxNumberCounting(){
 
 function calculation(){
     screenSumCounting();
-    console.log(final_screen_number);
-    console.log(final_screens_sum);
+    layout_price = final_screens_sum;
 
     let checkbox_percent = checkboxPercentCounting();
     console.log(checkbox_percent);
@@ -109,4 +120,26 @@ function calculation(){
 
     let rollback_percent = rollback_range.value;
     console.log(rollback_percent);
+
+    add_serv_price = layout_price * checkbox_percent + checkbox_number;
+    final_price = layout_price + add_serv_price;
+
+    total_layout_price.value = layout_price;
+    total_number.value = final_screen_number;
+    total_add_price.value = add_serv_price;
+    total_price.value = final_price;
+    total_price_roll.value = final_price * ( 1 - (rollback_percent / 100));
+
+    all_inputs = document.querySelectorAll('input');
+    all_selects = document.querySelectorAll('select');
+
+    all_inputs.forEach((input) => {
+        input.setAttribute('disabled', 'disabled');
+    });
+    
+    all_selects.forEach((select) => {
+        select.setAttribute('disabled', 'disabled');
+    });
+
+    reset_btn.style.display = 'block';
 };
