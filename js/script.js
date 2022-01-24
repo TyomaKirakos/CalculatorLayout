@@ -1,15 +1,16 @@
 // ---------------------------Константы------------------------------------
 const add_screen_btn = document.querySelector('.add-screen-btn');
-let del_screen_btn;
 const screens_block = document.querySelector('.main-controls__views');
 const start_btn = document.getElementById('start');
 const reset_btn = document.getElementById('reset');
-let screen_areas = document.querySelectorAll('.screen');
 const percent_checks = document.querySelectorAll('.other-items.percent')
 const number_checks = document.querySelectorAll('.other-items.number')
 const rollback_block = document.querySelector('.main-controls__range');
 const rollback_range = rollback_block.querySelector('input[type=range]');
 const rollback_value = rollback_block.querySelector('.range-value');
+let isValid_form = true;
+let del_screen_btn;
+let screen_areas = document.querySelectorAll('.screen');
 let layout_price = 0;
 let add_serv_price = 0;
 let final_price = 0;
@@ -85,6 +86,7 @@ function screenSumCounting(){
         let screen_number = Number(screen_area.querySelector('input[type=text]').value.trim());
         if (screen_type == '' || screen_number <= 0 || isNaN(screen_number)){
             alert('Введите корректные значения!');
+            isValid_form = false;
         }
         console.log(screen_number);
         final_screen_number += screen_number;
@@ -120,37 +122,39 @@ function checkboxNumberCounting(){
 // расчёт
 function calculation(){
     screenSumCounting();
-    layout_price = final_screens_sum;
+    if (isValid_form){
+        layout_price = final_screens_sum;
 
-    let checkbox_percent = checkboxPercentCounting();
-    console.log(checkbox_percent);
-
-    let checkbox_number = checkboxNumberCounting();
-    console.log(checkbox_number);
-
-
-    add_serv_price = layout_price * checkbox_percent + checkbox_number;
-    final_price = layout_price + add_serv_price;
-
-    total_layout_price.value = layout_price;
-    total_number.value = final_screen_number;
-    total_add_price.value = add_serv_price;
-    total_price.value = final_price;
-    total_price_roll.value = final_price * ( 1 - (rollback_range.value / 100));
-
-    all_inputs = screens_block.querySelectorAll('input[type=text]');
-    all_selects = document.querySelectorAll('select');
-    all_checkboxes = document.querySelectorAll('input[type=checkbox]');
-
-    all_input_fields = [all_inputs, all_selects, all_checkboxes];
-
-    all_input_fields.forEach((group) => {
-        group.forEach((element) => {
-            element.setAttribute('disabled', 'disabled');
+        let checkbox_percent = checkboxPercentCounting();
+        console.log(checkbox_percent);
+    
+        let checkbox_number = checkboxNumberCounting();
+        console.log(checkbox_number);
+    
+    
+        add_serv_price = layout_price * checkbox_percent + checkbox_number;
+        final_price = layout_price + add_serv_price;
+    
+        total_layout_price.value = layout_price;
+        total_number.value = final_screen_number;
+        total_add_price.value = add_serv_price;
+        total_price.value = final_price;
+        total_price_roll.value = final_price * ( 1 - (rollback_range.value / 100));
+    
+        all_inputs = screens_block.querySelectorAll('input[type=text]');
+        all_selects = document.querySelectorAll('select');
+        all_checkboxes = document.querySelectorAll('input[type=checkbox]');
+    
+        all_input_fields = [all_inputs, all_selects, all_checkboxes];
+    
+        all_input_fields.forEach((group) => {
+            group.forEach((element) => {
+                element.setAttribute('disabled', 'disabled');
+            });
         });
-    });
-
-    reset_btn.style.display = 'block';
+    
+        reset_btn.style.display = 'block';
+    }
 };
 
 // сброс
