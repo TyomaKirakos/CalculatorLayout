@@ -179,6 +179,9 @@ function reseting(){
         });
     });
 
+    rollback_range.value = 0;
+    rangeChanging();
+
     total_inputs.forEach((total_input) => {
         total_input.value = 0;
     });
@@ -192,6 +195,10 @@ function reseting(){
     start_btn.style.display = 'block';
     reset_btn.style.display = 'none';
 
-
-    rangeChanging();
+    total_layout_price.value = 0;
+    total_number.value = 0;
+    total_add_price.value = 0;
+    total_price.value = 0;
+    total_price_roll.value = 0;
+    final_price = 0;
 }
