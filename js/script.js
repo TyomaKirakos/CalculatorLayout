@@ -51,9 +51,9 @@ function screenSumCounting(){
         let screen_type_index = screen_area.querySelector('select').options.selectedIndex;
         let screen_type = screen_area.querySelector('select').options[screen_type_index].value;
         let screen_number = Number(screen_area.querySelector('input[type=text]').value.trim());
-        if (screen_type == '' || screen_number <= 0 || isNaN(screen_number)){
-            valid_form = false;
-        }
+        // if (screen_type == '' || screen_number <= 0 || isNaN(screen_number)){
+        //     valid_form = false;
+        // }
         console.log(screen_number);
         final_screen_number += screen_number;
         final_screens_sum += screen_type * screen_number;
@@ -89,6 +89,9 @@ function checkboxNumberCounting(){
 function calculation(){
     let final_screen_number  = screenSumCounting()[0];
     let final_screens_sum = screenSumCounting()[1];
+    // if(valid_form == false){
+    //     alert('Заполните поля корректно');
+    // }
     console.log(final_screen_number);
     console.log(final_screens_sum);
 
