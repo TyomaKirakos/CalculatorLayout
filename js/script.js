@@ -15,6 +15,7 @@ const cms_select_block = document.getElementById('cms_block');
 const cms_select = document.getElementById('cms-select');
 const cms_custom_block = cms_block.querySelector('.main-controls__input');
 const cms_custom = document.getElementById('cms-other-input');
+let cms_percent;
 let isValid_form = true;
 let del_screen_btn;
 let screen_areas = document.querySelectorAll('.screen');
@@ -61,11 +62,11 @@ function cmsCheckbox(){
 
 // выбор CMS
 function cmsSelect(){
-    if (this.value == 'other'){
+    if (cms_select.value == 'other'){
         cms_custom_block.style.display = 'block';
-    } // else if (){
-
-    // }
+    } else {
+        cms_custom_block.style.display = 'none';
+    }
 }
 
 // Добавление экранов
@@ -111,7 +112,6 @@ function screenSumCounting(){
         let screen_type = screen_area.querySelector('select').value;
         let screen_number = Number(screen_area.querySelector('input[type=text]').value.trim());
         if (screen_type == '' || screen_number <= 0 || isNaN(screen_number)){
-            alert('Введите корректные значения!');
             isValid_form = false;
         }
         console.log(screen_number);
@@ -129,6 +129,19 @@ function checkboxPercentCounting(){
             final_percent_checks += Number(percent_check.querySelector('input[type=text]').value);
         }
     });
+    if (cms_checkbox.checked){
+        if (cms_select.value == 'other'){
+            if (cms_custom.value == '' || cms_custom.value <= 0 || isNaN(cms_custom.value)){
+                isValid_form = false;
+            } else {
+                final_percent_checks += Number(cms_custom.value);
+            }
+        } else if (cms_select.value == ''){
+            isValid_form = false;
+        } else if (cms_select.value == '50'){
+            final_percent_checks += 50;
+        };
+    }
     final_percent_checks = final_percent_checks / 100;
     return final_percent_checks;
 }
@@ -148,15 +161,14 @@ function checkboxNumberCounting(){
 // расчёт
 function calculation(){
     screenSumCounting();
+    let checkbox_percent = checkboxPercentCounting();
+    console.log(checkbox_percent);
+    
+    let checkbox_number = checkboxNumberCounting();
+    console.log(checkbox_number);
+
     if (isValid_form){
         layout_price = final_screens_sum;
-
-        let checkbox_percent = checkboxPercentCounting();
-        console.log(checkbox_percent);
-    
-        let checkbox_number = checkboxNumberCounting();
-        console.log(checkbox_number);
-    
     
         add_serv_price = layout_price * checkbox_percent + checkbox_number;
         final_price = layout_price + add_serv_price;
@@ -181,6 +193,9 @@ function calculation(){
         
         start_btn.style.display = 'none';
         reset_btn.style.display = 'block';
+    } else{
+        confirm('Введите корректные значения!');
+        isValid_form = true;
     }
 };
 
@@ -210,10 +225,14 @@ function reseting(){
     start_btn.style.display = 'block';
     reset_btn.style.display = 'none';
 
+    cms_custom_block.style.display = 'none';
+    cms_block.style.display = 'none';
+
     total_layout_price.value = 0;
     total_number.value = 0;
     total_add_price.value = 0;
     total_price.value = 0;
     total_price_roll.value = 0;
     final_price = 0;
+    cms_custom.value = 0;
 }
