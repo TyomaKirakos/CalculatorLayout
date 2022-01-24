@@ -8,6 +8,9 @@ const number_checks = document.querySelectorAll('.other-items.number')
 const rollback_block = document.querySelector('.main-controls__range');
 const rollback_range = rollback_block.querySelector('input[type=range]');
 const rollback_value = rollback_block.querySelector('.range-value');
+const total_inputs = document.querySelectorAll('.total-input');
+// const cms_checkbox = document.getElementById('cms-open');
+// const cms_block = document.querySelector('.main-controls__item');
 let isValid_form = true;
 let del_screen_btn;
 let screen_areas = document.querySelectorAll('.screen');
@@ -40,8 +43,16 @@ add_screen_btn.addEventListener('click', addingScreens)
 start_btn.addEventListener('click',calculation);
 reset_btn.addEventListener('click', reseting)
 rollback_range.addEventListener('input', rangeChanging);
+// cms_checkbox.addEventListener('click', cmsCheckbox)
 
 // ---------------------------Функции------------------------------------
+// CMS
+// function cmsCheckbox(){
+//     if (cms_checkbox.checked){
+        
+//     }
+// }
+
 // Добавление экранов
 function addingScreens(){
     screen_areas = document.querySelectorAll('.screen');
@@ -64,7 +75,6 @@ function deletingScreens(){
     if (screen_areas.length > 1){
         screen_areas[screen_areas.length-1].remove();
         screen_areas = document.querySelectorAll('.screen');
-        console.log(screen_areas);
         if (screen_areas.length == 1){
             del_screen_btn.remove();
         }
@@ -74,6 +84,7 @@ function deletingScreens(){
 // Изменение Range
 function rangeChanging(){
     rollback_value.textContent = rollback_range.value + '%';
+    total_price_roll.value = final_price * ( 1 - (rollback_range.value / 100));
 }
 
 // расчёт вёрстки
@@ -152,7 +163,8 @@ function calculation(){
                 element.setAttribute('disabled', 'disabled');
             });
         });
-    
+        
+        start_btn.style.display = 'none';
         reset_btn.style.display = 'block';
     }
 };
@@ -167,6 +179,19 @@ function reseting(){
         });
     });
 
-    rollback_range.value = 0;
+    total_inputs.forEach((total_input) => {
+        total_input.value = 0;
+    });
+
+    if (screen_areas.length > 1){
+        for (let i = 0; i < (screen_areas.length-1); i++){
+            screen_areas[i].remove();
+        }
+    }
+
+    start_btn.style.display = 'block';
+    reset_btn.style.display = 'none';
+
+
     rangeChanging();
 }
