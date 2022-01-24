@@ -1,5 +1,6 @@
 // ---------------------------Константы------------------------------------
 const add_screen_btn = document.querySelector('.add-screen-btn');
+let del_screen_btn;
 const screens_block = document.querySelector('.main-controls__views');
 const start_btn = document.getElementById('start');
 const reset_btn = document.getElementById('reset');
@@ -20,8 +21,10 @@ let total_price_roll = document.getElementById('total-count-rollback');
 let new_screen_area;
 let final_screen_number = 0;
 let final_screens_sum = 0;
+let all_input_fields;
 let all_inputs;
 let all_selects;
+let all_checkboxes;
 
 // let valid_form = true;
 
@@ -34,6 +37,7 @@ let all_selects;
 // ---------------------Навешивание функций------------------------------
 add_screen_btn.addEventListener('click', addingScreens)
 start_btn.addEventListener('click',calculation);
+reset_btn.addEventListener('click', reseting)
 rollback_range.addEventListener('input', rangeChanging);
 
 // ---------------------------Функции------------------------------------
@@ -44,20 +48,25 @@ function addingScreens(){
     new_screen_area.querySelector('input').value = '';
     screen_areas[screen_areas.length-1].after(new_screen_area);
     if (document.querySelector('.del-screen-btn') == null){
-        let del_screen_btn = document.createElement('button');
+        del_screen_btn = document.createElement('button');
         del_screen_btn.textContent = '-';
         del_screen_btn.classList.add("screen-btn");
         del_screen_btn.classList.add("del-screen-btn");
         screens_block.append(del_screen_btn);
         del_screen_btn.addEventListener('click', deletingScreens);
-    }
+    };
 }
 
 // удаление экранов
 function deletingScreens(){
     screen_areas = document.querySelectorAll('.screen');
-    if (screen_areas.length != 1){
+    if (screen_areas.length > 1){
         screen_areas[screen_areas.length-1].remove();
+        screen_areas = document.querySelectorAll('.screen');
+        console.log(screen_areas);
+        if (screen_areas.length == 1){
+            del_screen_btn.remove();
+        }
     }
 }
 
@@ -108,6 +117,7 @@ function checkboxNumberCounting(){
     return final_number_checks;
 }
 
+// расчёт
 function calculation(){
     screenSumCounting();
     layout_price = final_screens_sum;
@@ -118,8 +128,6 @@ function calculation(){
     let checkbox_number = checkboxNumberCounting();
     console.log(checkbox_number);
 
-    let rollback_percent = rollback_range.value;
-    console.log(rollback_percent);
 
     add_serv_price = layout_price * checkbox_percent + checkbox_number;
     final_price = layout_price + add_serv_price;
@@ -128,18 +136,33 @@ function calculation(){
     total_number.value = final_screen_number;
     total_add_price.value = add_serv_price;
     total_price.value = final_price;
-    total_price_roll.value = final_price * ( 1 - (rollback_percent / 100));
+    total_price_roll.value = final_price * ( 1 - (rollback_range.value / 100));
 
-    all_inputs = document.querySelectorAll('input');
+    all_inputs = screens_block.querySelectorAll('input[type=text]');
     all_selects = document.querySelectorAll('select');
+    all_checkboxes = document.querySelectorAll('input[type=checkbox]');
 
-    all_inputs.forEach((input) => {
-        input.setAttribute('disabled', 'disabled');
-    });
-    
-    all_selects.forEach((select) => {
-        select.setAttribute('disabled', 'disabled');
+    all_input_fields = [all_inputs, all_selects, all_checkboxes];
+
+    all_input_fields.forEach((group) => {
+        group.forEach((element) => {
+            element.setAttribute('disabled', 'disabled');
+        });
     });
 
     reset_btn.style.display = 'block';
 };
+
+// сброс
+function reseting(){
+    all_input_fields.forEach((group) => {
+        group.forEach((element) => {
+            element.removeAttribute('disabled', 'disabled');
+            element.value = '';
+            element.checked = false;
+        });
+    });
+
+    rollback_range.value = 0;
+    rangeChanging();
+}
