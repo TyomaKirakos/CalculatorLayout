@@ -9,8 +9,12 @@ const rollback_block = document.querySelector('.main-controls__range');
 const rollback_range = rollback_block.querySelector('input[type=range]');
 const rollback_value = rollback_block.querySelector('.range-value');
 const total_inputs = document.querySelectorAll('.total-input');
-// const cms_checkbox = document.getElementById('cms-open');
-// const cms_block = document.querySelector('.main-controls__item');
+const cms_block = document.querySelector('.hidden-cms-variants');
+const cms_checkbox = document.getElementById('cms-open');
+const cms_select_block = document.getElementById('cms_block');
+const cms_select = document.getElementById('cms-select');
+const cms_custom_block = cms_block.querySelector('.main-controls__input');
+const cms_custom = document.getElementById('cms-other-input');
 let isValid_form = true;
 let del_screen_btn;
 let screen_areas = document.querySelectorAll('.screen');
@@ -30,8 +34,6 @@ let all_inputs;
 let all_selects;
 let all_checkboxes;
 
-// let valid_form = true;
-
 // Обед таксиста чееееек
 // console.log(screen_areas);
 // console.log(percent_checks);
@@ -41,17 +43,30 @@ let all_checkboxes;
 // ---------------------Навешивание функций------------------------------
 add_screen_btn.addEventListener('click', addingScreens)
 start_btn.addEventListener('click',calculation);
-reset_btn.addEventListener('click', reseting)
+reset_btn.addEventListener('click', reseting);
 rollback_range.addEventListener('input', rangeChanging);
-// cms_checkbox.addEventListener('click', cmsCheckbox)
+cms_checkbox.addEventListener('click', cmsCheckbox);
+cms_select.addEventListener('change', cmsSelect);
 
 // ---------------------------Функции------------------------------------
 // CMS
-// function cmsCheckbox(){
-//     if (cms_checkbox.checked){
+function cmsCheckbox(){
+    if (cms_checkbox.checked){
+        cms_block.style.display = 'block';
         
-//     }
-// }
+    } else {
+        cms_block.style.display = 'none';
+    }
+}
+
+// выбор CMS
+function cmsSelect(){
+    if (this.value == 'other'){
+        cms_custom_block.style.display = 'block';
+    } // else if (){
+
+    // }
+}
 
 // Добавление экранов
 function addingScreens(){
