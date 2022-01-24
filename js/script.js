@@ -1,5 +1,5 @@
 // ---------------------------Константы------------------------------------
-const add_screen_btn = document.querySelector('.screen-btn');
+const add_screen_btn = document.querySelector('.add-screen-btn');
 const screens_block = document.querySelector('.main-controls__views');
 const start_btn = document.getElementById('start');
 let screen_areas = document.querySelectorAll('.screen');
@@ -8,25 +8,45 @@ const number_checks = document.querySelectorAll('.other-items.number')
 const rollback_block = document.querySelector('.main-controls__range');
 const rollback_range = rollback_block.querySelector('input[type=range]');
 const rollback_value = rollback_block.querySelector('.range-value');
+let new_screen_area;
+let final_screen_number = 0;
+let final_screens_sum = 0;
 // let valid_form = true;
 
 // Обед таксиста чееееек
-console.log(screen_areas);
-console.log(percent_checks);
-console.log(number_checks);
-console.log(rollback_range);
+// console.log(screen_areas);
+// console.log(percent_checks);
+// console.log(number_checks);
+// console.log(rollback_range);
 
 // ---------------------Навешивание функций------------------------------
 add_screen_btn.addEventListener('click', addingScreens)
 start_btn.addEventListener('click',calculation);
-rollback_range.addEventListener('input', rangeChanging)
+rollback_range.addEventListener('input', rangeChanging);
 
 // ---------------------------Функции------------------------------------
 // Добавление экранов
 function addingScreens(){
-    let new_screen_area = screen_areas[screen_areas.length-1].cloneNode(true);
-    new_screen_area.querySelector('input[type=text]').value = '';
+    screen_areas = document.querySelectorAll('.screen');
+    new_screen_area = screen_areas[0].cloneNode(true);
+    new_screen_area.querySelector('input').value = '';
     screen_areas[screen_areas.length-1].after(new_screen_area);
+    if (document.querySelector('.del-screen-btn') == null){
+        let del_screen_btn = document.createElement('button');
+        del_screen_btn.textContent = '-';
+        del_screen_btn.classList.add("screen-btn");
+        del_screen_btn.classList.add("del-screen-btn");
+        screens_block.append(del_screen_btn);
+        del_screen_btn.addEventListener('click', deletingScreens);
+    }
+}
+
+// удаление экранов
+function deletingScreens(){
+    screen_areas = document.querySelectorAll('.screen');
+    if (screen_areas.length != 1){
+        screen_areas[screen_areas.length-1].remove();
+    }
 }
 
 // Изменение Range
@@ -34,31 +54,21 @@ function rangeChanging(){
     rollback_value.textContent = rollback_range.value + '%';
 }
 
-// Валидация
-// function validation(){
-
-
-//     if (isNaN(screen_number)){
-//         console.log('Введите корректное значение');
-//     };
-// }
-
+// расчёт вёрстки
 function screenSumCounting(){
+    final_screen_number = 0;
+    final_screens_sum = 0;
     screen_areas = document.querySelectorAll('.screen');
-    let final_screen_number = 0;
-    let final_screens_sum = 0;
     screen_areas.forEach((screen_area)=>{
-        let screen_type_index = screen_area.querySelector('select').options.selectedIndex;
-        let screen_type = screen_area.querySelector('select').options[screen_type_index].value;
+        let screen_type = screen_area.querySelector('select').value;
         let screen_number = Number(screen_area.querySelector('input[type=text]').value.trim());
-        // if (screen_type == '' || screen_number <= 0 || isNaN(screen_number)){
-        //     valid_form = false;
-        // }
+        if (screen_type == '' || screen_number <= 0 || isNaN(screen_number)){
+            alert('Введите корректные значения!');
+        }
         console.log(screen_number);
         final_screen_number += screen_number;
         final_screens_sum += screen_type * screen_number;
     });
-    return [final_screen_number, final_screens_sum];
 }
 
 // Функция расчёта чекбоксов с процентами
@@ -87,11 +97,7 @@ function checkboxNumberCounting(){
 }
 
 function calculation(){
-    let final_screen_number  = screenSumCounting()[0];
-    let final_screens_sum = screenSumCounting()[1];
-    // if(valid_form == false){
-    //     alert('Заполните поля корректно');
-    // }
+    screenSumCounting();
     console.log(final_screen_number);
     console.log(final_screens_sum);
 
